@@ -7,12 +7,13 @@ BMD_NO_voucher <- BMD_raw[which(BMD_raw$Voucher == "voucher_is_not_available"),]
 dim(BMD_voucher)[1]/(dim(BMD_voucher)[1] + dim(BMD_NO_voucher)[1]) * 100
 # Back-up BMD voucher
 BMD_voucher_bck <- BMD_voucher
+table(BMD_voucher$Coordinates == "coordinates_are_not_available")
 # replace the "_" at the begginig of the voucher string
 BMD_voucher$Voucher <- gsub("^_(*.*)_$", "\\1", BMD_voucher$Voucher)
 # separate the museum name and the number
 List_BMD_voucher <- strsplit(BMD_voucher$Voucher, split = "_")
 BMD_voucher$Museum_ID <- unlist(lapply(List_BMD_voucher, function(l) l[[1]][1]))
-over_500 <- head(sort(table(BMD_voucher$Museum_ID), decreasing = T), n=31)
+
 # plot a histogram for the museums with more than 500
 # IMPROVE: make the threshold flexible
 png("Museum_over_500.png")
