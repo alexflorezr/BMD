@@ -5,11 +5,14 @@ museum.list <- function(db, threshold){
         BMD_voucher$Voucher <- gsub("^_(*.*)_$", "\\1", BMD_voucher$Voucher)
         List_BMD_voucher <- strsplit(BMD_voucher$Voucher, split = "_")
         BMD_voucher$Museum_ID <- unlist(lapply(List_BMD_voucher,function(l) l[[1]][1]))
-        outfile_name <- paste("museums_over_", threshold, sep = "")
         tbl_museum_ID <- table(BMD_voucher$Museum_ID)
         tmp_df <- as.data.frame(tbl_museum_ID[tbl_museum_ID >= threshold])
-        colnames(tmp_df) <- c("Museum_ID", "Records")
-        assign(outfile_name,tmp_df )
-        get(outfile_name)
+        colnames(tmp_df) <- c("Museum_ID", "Seqs")
+        if (sum(c("", "U", "1B") %in% tmp_df$Museum_ID) > 0) {
+                m <- as.vector(na.omit(match(c("", "U", "1B"), tmp_df$Museum_ID)))
+                tmp_df <- tmp_df[-m,]
+                tmp_df <- tmp_df[order(tmp_df$Seqs, decreasing = T),]
+        }
+        tmp_df
 }
-museum.list(BMD_NO_coor_Genbank, 100)
+museum.list(BMD_target_all, 400)
