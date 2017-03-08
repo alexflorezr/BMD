@@ -59,13 +59,13 @@ tmp_bplot[3,is.na(tmp_bplot[3,])] <- 0
 tmp_bplot[1,] <- BMD_Vo_all_bplot-(tmp_bplot[2,] +tmp_bplot[3,])
 rowSums(tmp_bplot)
 ymax <- max(colSums(tmp_bplot))*1.1
-# plot the genbank data 
+# plot the genbank data
 par(mai=c(1.5,1.5,1.5,1.5))
 barplot(as.matrix(tmp_bplot), las=2, main = NA, 
         ylim = c(0,ymax), xlim=c(1,40),
         names.arg = colnames(tmp_bplot), las=2, col=c( "#D2B48C","#B0E2FF","#778899"),
         border = NA,cex.names = 0.8)
-mtext(side=3, line=2, "Museums with more than 400 records in GenBank", cex=1.5)
+mtext(side=3, line=2, "Museums with more than 400 sequences in GenBank", cex=1.5)
 mtext(side=3, line=1, paste(sum(BMD_Vo_all_bplot), "records in total"))
 mtext(side=1, line=4.5, cex=1.2, "Museum (abbreviation)")
 mtext(side=2, line=4, cex=1.2, "Sequences")

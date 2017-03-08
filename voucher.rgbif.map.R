@@ -3,6 +3,7 @@ library(rworldmap)
 map <- getMap()
 par(mfrow=c(3,1), mar=c(3,1,6,3))
 
+## @knitr voucher.rgbif.map
 map_A <- function(A){
         y_coor <- as.numeric(as.character(A$Lat))
         x_coor <- as.numeric(as.character(A$Long))
