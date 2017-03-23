@@ -34,8 +34,8 @@ museum.threshold <- function(A, threshold){
 ## @knitr barplot.museum
  
 # use BMD_target_all in BMD_explo_summary 
-BMD_target_400 <- museum.threshold(BMD_Vo_all, 400)
-BMD_Vo_all_bplot <- sort(table(BMD_target_400$Museum_id), decreasing = T)
+BMD_target_400 <- museum.threshold(BMD_voucher, 400)
+BMD_Vo_all_bplot <- sum(sort(table(BMD_target_400$Museum_id), decreasing = T))
 
 # Sequences with voucher and GenBank coordinates
 BMD_Vo_GB_coor <- BMD_target_400[BMD_target_400$Coordinates != "coordinates_are_not_available",]
