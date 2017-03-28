@@ -11,4 +11,5 @@ BMD_local_Genbank <- BMD_NO_coor_Genbank[BMD_NO_coor_Genbank$Location != "locati
 # subset sequences with no coordinates information, but with voucher information
 # this dataset includes ALL the data without coordinates, BUT with voucher information
 BMD_voucher <- BMD_NO_coor_Genbank[BMD_NO_coor_Genbank$Voucher != "voucher_is_not_available",]
-
+# database to include any sequence with voucher info in GenBank
+BMD_all_voucher <- BMD_raw[BMD_raw$Voucher != "voucher_is_not_available",]

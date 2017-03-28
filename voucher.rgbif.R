@@ -71,7 +71,7 @@ search_2_list <- function(mus_ID_sp, tmp_search){
 }
 
 # DESCRIBE THIS FUNCTION
-voucher.rgbif <- function(A, threshold, save_mode=T){
+voucher.rgbif <- function(A, threshold, save_mode = T, file_prefix=""){
         library(rgbif)
         library(reshape)
         library(tibble)
@@ -86,9 +86,10 @@ voucher.rgbif <- function(A, threshold, save_mode=T){
                                "institutionCode", "catalogNumber", "country",
                                "stateProvince", "county","locality", 
                                "verbatimLocality")
-        number_file <- 50
-        sp_not_found <- 1
-        sp_not_matching_records <- 1
+        #sp_not_found <- 1
+        #sp_not_matching_records <- 1
+        number_file <- 100
+        counter <- 0
         for(sp in seq_along(mus_sp)){
                 tmp_DB <- subset(DB_thold, DB_thold$Sp_bi == mus_sp[sp])
                 mus_ID_sp <- mus_ID[which(mus_ID %in% unique(tmp_DB$Museum_id))]
@@ -101,7 +102,7 @@ voucher.rgbif <- function(A, threshold, save_mode=T){
                 cond2 <- is.na(tmp_list[1])
                 if (cond1 & cond2){
                         # species with no records in Gbif
-                        print(paste(mus_sp[sp], "not found in Gbif", " (", sp_not_found, ")", sep=""))
+                        #print(paste(mus_sp[sp], "not found in Gbif", " (", sp_not_found, ")", sep=""))
                         sp_not_found <- sp_not_found + 1
                         next  
                 }else{
@@ -109,8 +110,9 @@ voucher.rgbif <- function(A, threshold, save_mode=T){
                         tmp_seq_hits <- tmp_seq_hits[which(!is.na(tmp_seq_hits))]
                 }
                 if (length(tmp_seq_hits) == 0){
-                        print(paste(mus_sp[sp], " has not matching records", " (", sp_not_matching_records, ")", sep=""))
+                        #print(paste(mus_sp[sp], " has not matching records", " (", sp_not_matching_records, ")", sep=""))
                         sp_not_matching_records <- sp_not_matching_records + 1
+                        next
                 }else{
                         tmp_sp_hits <- lapply(tmp_seq_hits, seq.hits.extract)
                         tmp_sp_hits <- tmp_sp_hits[order(sapply(tmp_sp_hits, ncol), decreasing = T)]
@@ -118,15 +120,19 @@ voucher.rgbif <- function(A, threshold, save_mode=T){
                         #print(paste(sp, " out of ", length(mus_sp)))
                 }
                 sp_hits <- merge(sp_hits, tmp_hits , all = T)
-                if (save_mode == T & sp == number_file){
-                        file_name <- paste(number_file, "_rgbif.txt", sep = "")
+                print(sp)
+                counter <- counter + 1
+                if (save_mode == T && counter == number_file){
+                        file_name <- paste(number_file, "_", file_prefix, "_rgbif_out.txt", sep = "")
                         write.table(file = file_name, sp_hits, sep="\t", row.names = F)
-                        number_file <- number_file + 50
-                }else{
-                        sp_hits
+                        number_file <- number_file + 100
                 }
         }
+        sp_hits
 }
 
 setwd("/Users/afr/Desktop/A/Postdoc/Birds_museum_data/BMD_exploratory/rgbif_test_out/")
-rgbif_out <- voucher.rgbif(A = test_DB_mus, test_thold, save_mode = T)
+setwd("/Users/afr/Desktop/A/Postdoc/Birds_museum_data/BMD_exploratory/rgbif_all_voucher_out/")
+rgbif_all_voucher_out <- voucher.rgbif(A = BMD_all_voucher_mus, 400, save_mode = T, file_prefix = "all_voucher")
+DB <- BMD_all_voucher_mus
+save_mode <- T

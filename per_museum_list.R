@@ -33,7 +33,9 @@ museum.threshold <- function(A, threshold){
 
 ## @knitr barplot.museum
  
-# use BMD_target_all in BMD_explo_summary 
+# use BMD_target_all in BMD_explo_summary
+BMD_all_voucher_mus <- museum.threshold(BMD_all_voucher, 400)
+
 BMD_target_400 <- museum.threshold(BMD_voucher, 400)
 BMD_Vo_all_bplot <- sum(sort(table(BMD_target_400$Museum_id), decreasing = T))
 

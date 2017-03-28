@@ -18,4 +18,4 @@ museum.list <- function(db, threshold){
         }
         tmp_df
 }
-
+museum.list(BMD_all_voucher, 500)
