@@ -1,0 +1,22 @@
+---
+title: "Bird museum data (BMD)"
+author: |
+        | Alexander Florez Rodriguez
+        | Center for Macroecology, Evolution and Climate
+date: "4/3/2017"
+output: pdf_document
+---
+
+# Map of Genetic diversity of Aves 
+## What data we need?
+
+We need georeferenced DNA sequences to map the genetic diversity of any taxa. There are several ways to obtain this data. 1) directly from GenBank (or other genetic repositories), 2) using geonames to estimate the coordinates of the localities reported in GenBank, 3) Use other information in the GenBank records (e.g. voucher number, collection id) as links for cross-reference with other databases (e.g. museum's and Gbif). Here I describe the dataset of mitochondrial DNA sequences for all Aves available in GenBank and how to obtain the voucher information for the sequences in GenBank.
+
+```{r}
+# Location of the the raw database
+db <- "/Users/afr/Desktop/A/Postdoc/Birds_museum_data/BMD_exploratory/Data/coordinates.temp"
+# Read the database
+BMD_raw <- read.delim(db, header = F, stringsAsFactors = F)
+# Add names to the columns
+colnames(BMD_raw) <- c("ID", "Species", "Coordinates", "Location", "Voucher","Isolate", "Haplotype")
+```

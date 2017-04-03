@@ -8,7 +8,7 @@ match.voucher <- function(tible, tmp_DB){
         Catalog_num <- tible$catalogNumber
         tmp_DB_mus <- tmp_DB[tmp_DB$Museum_id == tmp_mus,]
         m <- match(tmp_DB_mus$Number_id, gsub(".*([0-9]*)*.*", "\\1", Catalog_num))
-        m <- as.vector(na.omit(m))
+        m <- unique(as.vector(na.omit(m)))
         if (length(m) > 0){
                 tmp_out <- tible[m,]
                 # include the ID column in the raw data, that will make easy to match them afterwards
@@ -61,6 +61,7 @@ search_2_list <- function(mus_ID_sp, tmp_search){
                                 if (tmp_search[mus][[tmp_names[mus]]]$meta$count > 0){
                                         tmp_data <- tmp_search[mus][[tmp_names[mus]]]$data
                                         tmp_list[[count]] <- tmp_data
+                                        count <- count + 1
                                 }
                         }
                 }else{
@@ -71,7 +72,7 @@ search_2_list <- function(mus_ID_sp, tmp_search){
 }
 
 # DESCRIBE THIS FUNCTION
-voucher.rgbif <- function(A, threshold, save_mode = T, file_prefix=""){
+voucher.rgbif <- function(A, threshold, save_mode = T, file_prefix="", start_db=1, end_db=2){
         library(rgbif)
         library(reshape)
         library(tibble)
@@ -88,9 +89,9 @@ voucher.rgbif <- function(A, threshold, save_mode = T, file_prefix=""){
                                "verbatimLocality")
         #sp_not_found <- 1
         #sp_not_matching_records <- 1
-        number_file <- 100
-        counter <- 0
-        for(sp in seq_along(mus_sp)){
+        number_file <- start_db + 99
+        counter <- start_db - 1
+        for(sp in start_db:end_db){
                 tmp_DB <- subset(DB_thold, DB_thold$Sp_bi == mus_sp[sp])
                 mus_ID_sp <- mus_ID[which(mus_ID %in% unique(tmp_DB$Museum_id))]
                 tmp_search <- occ_search(scientificName = mus_sp[sp], institutionCode = mus_ID_sp, limit = 10000)
@@ -103,7 +104,7 @@ voucher.rgbif <- function(A, threshold, save_mode = T, file_prefix=""){
                 if (cond1 & cond2){
                         # species with no records in Gbif
                         #print(paste(mus_sp[sp], "not found in Gbif", " (", sp_not_found, ")", sep=""))
-                        sp_not_found <- sp_not_found + 1
+                        #sp_not_found <- sp_not_found + 1
                         next  
                 }else{
                         tmp_seq_hits <- lapply(tmp_list,FUN =match.voucher, tmp_DB)
@@ -111,7 +112,7 @@ voucher.rgbif <- function(A, threshold, save_mode = T, file_prefix=""){
                 }
                 if (length(tmp_seq_hits) == 0){
                         #print(paste(mus_sp[sp], " has not matching records", " (", sp_not_matching_records, ")", sep=""))
-                        sp_not_matching_records <- sp_not_matching_records + 1
+                        #sp_not_matching_records <- sp_not_matching_records + 1
                         next
                 }else{
                         tmp_sp_hits <- lapply(tmp_seq_hits, seq.hits.extract)
@@ -131,8 +132,16 @@ voucher.rgbif <- function(A, threshold, save_mode = T, file_prefix=""){
         sp_hits
 }
 
-setwd("/Users/afr/Desktop/A/Postdoc/Birds_museum_data/BMD_exploratory/rgbif_test_out/")
-setwd("/Users/afr/Desktop/A/Postdoc/Birds_museum_data/BMD_exploratory/rgbif_all_voucher_out/")
-rgbif_all_voucher_out <- voucher.rgbif(A = BMD_all_voucher_mus, 400, save_mode = T, file_prefix = "all_voucher")
-DB <- BMD_all_voucher_mus
-save_mode <- T
+setwd("/Users/afr/Desktop/A/Postdoc/Birds_museum_data/BMD_exploratory/rgbif_out/")
+rgbif_out <- voucher.rgbif(A = BMD_all_voucher_mus, 400, save_mode =T , file_prefix = "all_voucher", 
+                          start_db = 1, end_db = 6334)
+# the run stoped at the sp 2503 for a URL retrival problem. Here I restarted it ...
+# ... at 2101, the last saved version was at 2100
+setwd("/Users/afr/Desktop/A/Postdoc/Birds_museum_data/BMD_exploratory/rgbif_out2/")
+rgbif_out <- voucher.rgbif(A = BMD_all_voucher_mus, 400, save_mode =T , file_prefix = "all_voucher", 
+                           start_db = 2101, end_db = 6334)
+setwd("/Users/afr/Desktop/A/Postdoc/Birds_museum_data/BMD_exploratory/rgbif_out3/")
+rgbif_out_300 <- voucher.rgbif(A = BMD_unq_vou_300, 300, save_mode =T , file_prefix = "unq_vou_300", 
+                           start_db = 1, end_db = 6225)
+
+DB <- BMD_unq_vou_300

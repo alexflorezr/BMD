@@ -2,7 +2,9 @@
 title: "BMD museum voucher exploration"
 author: "Alexander Florez Rodriguez"
 date: "February 27, 2017"
-output: html_document
+output: 
+        md_document:
+        variant: markdown_github
 ---
 ### Extracting sequences' coordinates using voucher information in GenBank
 

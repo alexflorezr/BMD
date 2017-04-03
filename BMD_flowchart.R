@@ -3,7 +3,7 @@
 library(diagram)
 library(schoolmath)
 BMD.fchart.nodes <- function(flow_table){
-        elpos <- coordinates(c(1, 1, 1, rep(19, 6)))
+        elpos <- coordinates(c(1, 1, rep(11, 4)))
         for(A in seq_along(flow_table[,1])){
                 tmp_pos <- flow_table$Pos[A]
                 tmp_label <- flow_table$Label[A]

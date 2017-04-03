@@ -34,9 +34,25 @@ museum.threshold <- function(A, threshold){
 ## @knitr barplot.museum
  
 # use BMD_target_all in BMD_explo_summary
-BMD_all_voucher_mus <- museum.threshold(BMD_all_voucher, 400)
 
-BMD_target_400 <- museum.threshold(BMD_voucher, 400)
+BMD_all_voucher_mus <- museum.threshold(BMD_all_voucher, 400)
+BMD_unq_vou_400 <- museum.threshold(BMD_unq_voucher, 400)
+BMD_unq_vou_300 <- museum.threshold(BMD_unq_voucher, 300)
+# remove records with duplicated ID
+BMD_unq_vou_300 <- BMD_unq_vou_300[-which(duplicated(BMD_unq_vou_300$ID)),]
+
+BMD_unq_vou_200 <- museum.threshold(BMD_unq_voucher, 200)
+
+unique(BMD_unq_vou_400$Museum_id)
+unique(BMD_unq_vou_300$Museum_id)
+unique(BMD_unq_vou_200$Museum_id)
+sum(BMD_all_voucher_mus$Coordinates != "coordinates_are_not_available")
+
+
+
+
+
+
 BMD_Vo_all_bplot <- sum(sort(table(BMD_target_400$Museum_id), decreasing = T))
 
 # Sequences with voucher and GenBank coordinates
