@@ -1,0 +1,1 @@
+ID_node	LabelGenbank	mtDNA in GenBankVoucher	Have voucher?Unique	Unique voucher ID?Coo_noV	Have coordinates?Repeat	Repeated voucherCoo_V	Have coordinates?WoCoo_WoV	Have locality?Coo_WoV	CoordinatesCoo_WV	CoordinatesLoc_WoV	Have locality?No_info	No informationLoc_av	LocalityNo_infoV	LocalityLoc_WV	No information
