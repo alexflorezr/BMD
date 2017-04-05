@@ -1,3 +1,5 @@
+#### TO SAVE ####
+#### This flowchart is for the GenBank data ####
 #### files needed ####
 db <- "/Users/afr/Desktop/A/Postdoc/Birds_museum_data/BMD_exploratory/Data/coordinates.temp"
 # Read the database
@@ -54,6 +56,7 @@ make.flowtable_GenB <- function(DB_raw, node_names_tbl){
         # Sequences with unique voucher, BUT no coordinates, nor localities
         BMD_unq_vo_NO_coo_NO_loc <- BMD_unq_vo_NO_coo[BMD_unq_vo_NO_coo$Location == "location is not available",]
         tmp_flow$Value[14] <-  dim(BMD_unq_vo_NO_coo_NO_loc)[1]
+        tmp_flow$Percent <- round(tmp_flow$Value * 100 / tmp_flow$Value[1], digits = 0)
         tmp_flow
 }
 BMD.fchart.nodes <- function(flow_table){
@@ -80,8 +83,10 @@ BMD.fchart.text <- function(flow_table){
                 tmp_pos <- flow_table$Pos[A]
                 tmp_label <- flow_table$Label[A]
                 tmp_value <- flow_table$Value[A]
+                tmp_percent <- flow_table$Percent[A]
+                tmp_paste <- paste(tmp_value, " (", tmp_percent, "%)", sep = "")
                 textplain(elpos[tmp_pos,], adj=c(0.5,1.2),lab = tmp_label, cex=0.8)
-                textplain(elpos[tmp_pos,], adj=c(0.5,-0.8),lab = tmp_value, cex=0.8)
+                textplain(elpos[tmp_pos,], adj=c(0.5,-0.8),lab = tmp_paste, cex=0.8)
         }
 }
 BMD.fchart.backbone <- function(fromto_edge){
