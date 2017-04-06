@@ -1,1 +1,1 @@
-ID_node	LabelUnique	Unique voucherMus300	Museums 300+ seqs?rgbif	Geo info in rGBIF?Tail 	Museum tailtarget	Museum targetHave_coo	Have coordinate in GBIF?G_coo	GBIF coordinateG_loc	GBIF locality
+ID_node	LabelUnique	Unique voucherMus300	Museums 300+ seqs?rgbif	Geo info in rGBIF?Tail 	Museum tailtarget	Museum targetHave_coo	Coordinate in GBIF?G_coo	GBIF coordinateG_loc	GBIF locality

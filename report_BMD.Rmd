@@ -1,22 +1,49 @@
 ---
 title: "Bird museum data (BMD)"
 author: |
-        | Alexander Florez Rodriguez
-        | Center for Macroecology, Evolution and Climate
+  | Alexander Florez Rodriguez
+  | Center for Macroecology, Evolution and Climate
 date: "4/3/2017"
-output: pdf_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 # Map of Genetic diversity of Aves 
 ## What data we need?
 
-We need georeferenced DNA sequences to map the genetic diversity of any taxa. There are several ways to obtain this data. 1) directly from GenBank (or other genetic repositories), 2) using geonames to estimate the coordinates of the localities reported in GenBank, 3) Use other information in the GenBank records (e.g. voucher number, collection id) as links for cross-reference with other databases (e.g. museum's and Gbif). Here I describe the dataset of mitochondrial DNA sequences for all Aves available in GenBank and how to obtain the voucher information for the sequences in GenBank.
+We need georeferenced DNA sequences to map the genetic diversity of any taxa. There are several ways to obtain this data. 1) directly from GenBank (or other genetic repositories), 2) using geonames to estimate the coordinates of the localities reported in GenBank, 3) Use other information in the GenBank records (e.g. voucher number, collection id) as links for cross-referencing with other databases (e.g. museum's and Gbif). Here I describe the dataset of mitochondrial DNA sequences for all Aves available in GenBank and how to obtain the voucher information for the sequences in GenBank.
 
-```{r}
+```{r, echo=F, cache=F}
+library(knitr)
+read_chunk('flowchart_genbank_BMD.R')
+read_chunk('flowchart_rgbif_BMD.R')
+read_chunk('barplot_museum_BMD.R')
+read_chunk('per_museum_list_BMD.R')
+read_chunk('museum_list_BMD.R')
+```
+```{r echo=F}
 # Location of the the raw database
 db <- "/Users/afr/Desktop/A/Postdoc/Birds_museum_data/BMD_exploratory/Data/coordinates.temp"
 # Read the database
 BMD_raw <- read.delim(db, header = F, stringsAsFactors = F)
 # Add names to the columns
 colnames(BMD_raw) <- c("ID", "Species", "Coordinates", "Location", "Voucher","Isolate", "Haplotype")
+```
+
+We obtained all mitochondrial sequences for Aves in Genbank, in total there are `r dim(BMD_raw)[1]` sequences. The binary tree below shows how the data is divided by category. Each one of the nodes correspond to a subset of the total dataset. For each node the number of sequences and the percentage relative to the total database is shown. Also, for each node a question (?) or a descriptor is shown (below the numbers). If it is a question, this node will be divided (subseted) in both, YES and NO branches.
+
+```{r flowchart.genbank, echo=F}
+```
+
+```{r museum.list, echo=F}
+```
+
+```{r museum.threshold, echo=F}
+```
+
+```{r flowchart.rgbif, echo=F}
+```
+
+```{r barplot.museum, echo=F}
 ```

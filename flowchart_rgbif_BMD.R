@@ -1,4 +1,5 @@
 #### files needed ####
+## ---- flowchart.rgbif ----
 db <- "/Users/afr/Desktop/A/Postdoc/Birds_museum_data/BMD_exploratory/Data/coordinates.temp"
 # Read the database
 BMD_raw <- read.delim(db, header = F, stringsAsFactors = F)
@@ -12,7 +13,6 @@ node_names.rgbif <- read.delim("rgbif_node_names.txt", header=T, sep = "\t")
 fromto_edge <- read.delim("rgbif_fchart_fromto.txt", header=F)
 
 #### libraries and internal functions ####
-## @knitr flowchart.rgbif
 library(diagram)
 library(schoolmath)
 make.flowtable_rgbif <- function(DB_raw, rgbif_out, node_names_tbl){
@@ -42,7 +42,7 @@ make.flowtable_rgbif <- function(DB_raw, rgbif_out, node_names_tbl){
         tmp_flow
 }
 BMD.fchart.backbone.rgbif <- function(fromto_edge, boolean_lab){
-        par(mar = c(1, 4, 3, 1))
+        par(mar = c(0, 0, 0, 0), oma=c(0,0,0,0))
         openplotmat()
         elpos <- coordinates(c(1,1, rep(11, 3)))
         fromto <- fromto_edge[,c(1,2)]
@@ -54,9 +54,9 @@ BMD.fchart.backbone.rgbif <- function(fromto_edge, boolean_lab){
         }
         for(pos in seq_along(arrpos[,1])){
                 if (is.even(pos)){
-                        text(arrpos[pos,1] - 0.015, arrpos[pos,2] + 0.01, boolean_lab[pos], cex=.8)
+                        text(arrpos[pos,1] - 0.017, arrpos[pos,2] + 0.01, boolean_lab[pos], cex=.7)
                 }else{
-                        text(arrpos[pos,1] + 0.015, arrpos[pos,2] + 0.01, boolean_lab[pos], cex=.8)
+                        text(arrpos[pos,1] + 0.017, arrpos[pos,2] + 0.01, boolean_lab[pos], cex=.7)
                 }
         }
 }
@@ -64,7 +64,7 @@ BMD.fchart.nodes.rgbif <- function(flow_table){
         elpos <- coordinates(c(1,1, rep(11, 3)))
         for(A in seq_along(flow_table[,1])){
                 tmp_pos <- flow_table$Pos[A]
-                textround (elpos[tmp_pos,], 0.055, 0.03,lab = "",
+                textround (elpos[tmp_pos,], 0.048, 0.04,lab = "",
                            box.col = ifelse(tmp_pos == 1,"#EE7600", ifelse(tmp_pos == 15, "#EE6363", "#8FBC8F")), shadow.col = NULL,
                            lcol = ifelse(tmp_pos == 1,"#EE7600", ifelse(tmp_pos == 15, "#EE6363", "#8FBC8F")))
         }
@@ -77,8 +77,8 @@ BMD.fchart.text.rgbif <- function(flow_table){
                 tmp_value <- flow_table$Value[A]
                 tmp_percent <- flow_table$Percent[A]
                 tmp_paste <- paste(tmp_value, " (", tmp_percent, "%)", sep = "")
-                textplain(elpos[tmp_pos,], adj=c(0.5,1.2),lab = tmp_label, cex=0.8)
-                textplain(elpos[tmp_pos,], adj=c(0.5,-0.8),lab = tmp_paste, cex=0.8)
+                textplain(elpos[tmp_pos,], adj=c(0.5,1),lab = tmp_label, cex=0.7)
+                textplain(elpos[tmp_pos,], adj=c(0.5,-0.7),lab = tmp_paste, cex=0.7)
         }
 }
 

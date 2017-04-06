@@ -1,18 +1,18 @@
 # create a barplot for the number of records per museum 
-
+## ---- barplot.museum ----
 #### infiles (BMD_all_voucher and rgbif_300) ####
 db <- "/Users/afr/Desktop/A/Postdoc/Birds_museum_data/BMD_exploratory/Data/coordinates.temp"
 # Read the database
-BMD_raw <- read.delim(db, header = F, stringsAsFactors = F)
+DB_raw <- read.delim(db, header = F, stringsAsFactors = F)
 # Add names to the columns
-colnames(BMD_raw) <- c("ID", "Species", "Coordinates", "Location", "Voucher","Isolate", "Haplotype")
+colnames(DB_raw) <- c("ID", "Species", "Coordinates", "Location", "Voucher","Isolate", "Haplotype")
 # subset sequences with voucher information
 BMD_all_voucher <- DB_raw[DB_raw$Voucher != "voucher_is_not_available",]
 # subset the sequences with unique vouchers
 BMD_unq_voucher <- BMD_all_voucher[-which(duplicated(BMD_all_voucher$Voucher)),]
 # gbif target
 target_rgbif_300 <- museum.threshold(BMD_unq_voucher, 300)
-target_rgbif_300 <- targer_rgbif_300[-which(duplicated(targer_rgbif_300$ID)),]
+target_rgbif_300 <- target_rgbif_300[-which(duplicated(target_rgbif_300$ID)),]
 # load the voucher.rgbif output #
 rgbif_300 <- read.delim("../rgbif_out3/3600_unq_vou_300_rgbif_out.txt", header = T, sep = "\t")
 
@@ -20,10 +20,8 @@ rgbif_300 <- read.delim("../rgbif_out3/3600_unq_vou_300_rgbif_out.txt", header =
 Genbank_Gbif_target <- merge(BMD_unq_voucher, target_rgbif_300[,c(1,8:12)], by.x = "ID", by.y = "ID", all=T)
 Genbank_Gbif <- merge(Genbank_Gbif_target, rgbif_300, by.x = "ID", by.y = "ID", all=T)
 
+
 #### barplot ####
-
-## @knitr barplot.museum
-
 # Table for the stacked barplot
 Genbank_Gbif$unique_museum_id <- Genbank_Gbif$Museum_id
 Genbank_Gbif$unique_museum_id[which(Genbank_Gbif$unique_museum_id == "LSUMNS")] <- "LSU"
@@ -58,9 +56,9 @@ for(mus in seq_along(unique_museum)){
         tmp_mus_no_loc_gbif <- subset(tmp_mus_no_loc_gbank, is.na(tmp_mus_no_loc_gbank$verbatimLocality))
         barplot_tbl[5,mus] <- dim(tmp_mus_no_loc_gbif)[1]
 }
-par(mar=c(6,6,7,5))
+par(mar=c(6,6,7,5), oma=c(0,0,0,0))
 barplot(as.matrix(barplot_tbl), las=2, main = NA,
-        names.arg = colnames(barplot_tbl), las=2, col=c( "#4682B4","#6E8B3D","#87CEFF","#9ACD32", "#F08080"),
+        names.arg = colnames(barplot_tbl), las=2, col=c( "#B2DFEE","#8FBC8F","#4F94CD","#2E8B57", "#EE6363"),
         border = NA,cex.names = 0.8)
 mtext(side=3, line=5, "Museums with more than 300 sequences in GenBank", cex=1.5)
 mtext(side=3, line=3, paste(dim(target_rgbif_300)[1], " records")) 
@@ -77,7 +75,6 @@ lgnd_2 <- paste("Coordinates in GBIF")
 lgnd_3 <- paste("Locality in GenBank")
 lgnd_4 <- paste("Locality in GBIF") 
 lgnd_5 <- paste("No geographical information") 
- 
 legend(19, 5000, legend=c(lgnd_1, lgnd_2, lgnd_3, lgnd_4, lgnd_5),
-       border = "white",fill = c("#4682B4","#6E8B3D","#87CEFF","#9ACD32", "#F08080"),
-       bty = "n",x.intersp = 0.2, y.intersp = 0.7, cex = 0.9)
+       border = "white",fill = c( "#B2DFEE","#8FBC8F","#4F94CD","#2E8B57", "#EE6363"),
+       box.lwd = 0,box.col = "white",bg = "white", x.intersp = 0.2, y.intersp = 1, cex = 0.7)

@@ -1,18 +1,22 @@
 #### TO SAVE ####
 #### This flowchart is for the GenBank data ####
 #### files needed ####
+## ---- flowchart.genbank ----
 db <- "/Users/afr/Desktop/A/Postdoc/Birds_museum_data/BMD_exploratory/Data/coordinates.temp"
 # Read the database
 BMD_raw <- read.delim(db, header = F, stringsAsFactors = F)
 # Add names to the columns
 colnames(BMD_raw) <- c("ID", "Species", "Coordinates", "Location", "Voucher","Isolate", "Haplotype")
 # node_names is a table with one colum indicating the name of the nodes
+
 node_names <- read.delim("node_names.txt", header=T, sep = "\t")
 # fromto_edge indicate the connections among nodes
 fromto_edge <- read.delim("fchart_fromto.txt", header=F)
 #### libraries and internal functions ####
+
 library(diagram)
 library(schoolmath)
+library(shape)
 make.flowtable_GenB <- function(DB_raw, node_names_tbl){
         tmp_flow <- node_names_tbl
         tmp_flow$Pos <- c(1,2,5,11,15,17,21,23,27,29,31,33,39,41)
@@ -63,17 +67,27 @@ BMD.fchart.nodes <- function(flow_table){
         elpos <- coordinates(c(1, 1, rep(11, 4)))
         for(A in seq_along(flow_table[,1])){
                 tmp_pos <- flow_table$Pos[A]
-                textround (elpos[tmp_pos,], 0.055, 0.03,lab = "",
+                textround (elpos[tmp_pos,], 0.048, 0.04,lab = "",
                            box.col = ifelse(tmp_pos == 17,"#EE7600", "#B2DFEE"), shadow.col = NULL,
                            lcol = ifelse(tmp_pos == 17,"#EE7600", "#B2DFEE"))
         }
 }
-BMD.fchart.edges <- function(array_pos, boolean_lab){
-        for(pos in seq_along(array_pos[,1])){
+BMD.fchart.backbone <- function(fromto_edge, boolean_lab){
+        par(mar = c(0, 0, 0, 0), oma=c(0,0,0,0))
+        openplotmat()
+        elpos <- coordinates(c(1,1, rep(11, 4)))
+        fromto <- fromto_edge[,c(1,2)]
+        nr <- nrow(fromto)
+        arrpos <- matrix(ncol = 2, nrow = nr)
+        for (i in 1:nr) {
+                arrpos[i, ] <- straightarrow (to = elpos[fromto[i, 2], ], from = elpos[fromto[i, 1], ],
+                                              lwd = 1, arr.length = 0)
+        }
+        for(pos in seq_along(arrpos[,1])){
                 if (is.even(pos)){
-                        text(arrpos[pos,1] - 0.015, arrpos[pos,2] + 0.01, boolean_lab[pos], cex=.8)
+                        text(arrpos[pos,1] - 0.017, arrpos[pos,2] + 0.01, boolean_lab[pos], cex=.7)
                 }else{
-                        text(arrpos[pos,1] + 0.015, arrpos[pos,2] + 0.01, boolean_lab[pos], cex=.8)
+                        text(arrpos[pos,1] + 0.017, arrpos[pos,2] + 0.01, boolean_lab[pos], cex=.7)
                 }
         }
 }
@@ -85,25 +99,15 @@ BMD.fchart.text <- function(flow_table){
                 tmp_value <- flow_table$Value[A]
                 tmp_percent <- flow_table$Percent[A]
                 tmp_paste <- paste(tmp_value, " (", tmp_percent, "%)", sep = "")
-                textplain(elpos[tmp_pos,], adj=c(0.5,1.2),lab = tmp_label, cex=0.8)
-                textplain(elpos[tmp_pos,], adj=c(0.5,-0.8),lab = tmp_paste, cex=0.8)
+                textplain(elpos[tmp_pos,], adj=c(0.5,1),lab = tmp_label, cex=0.7)
+                textplain(elpos[tmp_pos,], adj=c(0.5,-0.7),lab = tmp_paste, cex=0.7)
         }
 }
-BMD.fchart.backbone <- function(fromto_edge){
-        par(mar = c(1, 4, 3, 1))
-        openplotmat()
-        elpos <- coordinates(c(1, 1, rep(11, 4)))
-        fromto <- fromto_edge[,c(1,2)]
-        nr <- nrow(fromto)
-        arrpos <- matrix(ncol = 2, nrow = nr)
-        for (i in 1:nr) {
-                arrpos[i, ] <- straightarrow (to = elpos[fromto[i, 2], ], from = elpos[fromto[i, 1], ],
-                                              lwd = 1, arr.length = 0)
-        }
-}
+
 #### the script ####
-flow_nodes <-make.flowtable_GenB(BMD_raw,node_names)
-BMD.fchart.backbone(fromto_edge)
+#pdf(file = "flowchart_genbank.pdf")
+flow_nodes <- make.flowtable_GenB(BMD_raw,node_names)
+BMD.fchart.backbone(fromto_edge, fromto_edge[,3])
 BMD.fchart.nodes(flow_nodes)
-BMD.fchart.edges(arrpos, fromto_edge[,3])
 BMD.fchart.text(flow_nodes)
+#dev.off()

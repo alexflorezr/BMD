@@ -1,7 +1,7 @@
 # function to get the museums with more than X amount of sequences
 # CHECK: almost 2886 sequences with empty (" ") museum name
 
-## @knitr museum.list
+## ---- museum.list ----
 
 museum.list <- function(db, threshold){
         BMD_voucher <- db
@@ -18,4 +18,4 @@ museum.list <- function(db, threshold){
         }
         tmp_df
 }
-museum.list(BMD_all_voucher, 500)
+

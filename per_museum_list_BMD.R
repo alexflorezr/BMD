@@ -1,7 +1,7 @@
 # remove variables in the environment
 rm(list=ls())
 
-## @knitr museum.threshold
+## ---- museum.threshold ----
 
 # create BMD target for museums with more than x (threshold) sequences
 museum.threshold <- function(A, threshold){
@@ -26,7 +26,7 @@ museum.threshold <- function(A, threshold){
                                                 replacement = paste("\\", b-7,sep=""))
                 }
                 tmp_BMD_museum <- rbind(tmp_BMD_museum, temp_museum)
-                print(a)
+                #print(a)
         }
         return(tmp_BMD_museum)        
 }
