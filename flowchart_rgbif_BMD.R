@@ -15,7 +15,7 @@ fromto_edge <- read.delim("rgbif_fchart_fromto.txt", header=F)
 ## @knitr flowchart.rgbif
 library(diagram)
 library(schoolmath)
-make.flowtable_rgbif <- function(DB_raw, rgbif_300, node_names_tbl){
+make.flowtable_rgbif <- function(DB_raw, rgbif_out, node_names_tbl){
         tmp_flow <- node_names_tbl
         tmp_flow$Pos <- c(1,2, 5, 11, 15, 17, 27, 29)
         # Number of mtDNA sequences with unique voucher information
@@ -24,13 +24,13 @@ make.flowtable_rgbif <- function(DB_raw, rgbif_300, node_names_tbl){
         tmp_flow$Value[1] <- dim(BMD_unq_voucher)[1]
         tmp_flow$Value[2] <- dim(BMD_unq_voucher)[1]
         # Sequences in the museum with more than 300 sequences
-        rgbif_300 <- museum.threshold(BMD_unq_voucher, 300)
-        rgbif_300 <- rgbif_300[-which(duplicated(rgbif_300$ID)),]
-        tmp_flow$Value[3] <- dim(rgbif_300)[1]
+        target_rgbif_300 <- museum.threshold(BMD_unq_voucher, 300)
+        target_rgbif_300 <- target_rgbif_300[-which(duplicated(target_rgbif_300$ID)),]
+        tmp_flow$Value[3] <- dim(target_rgbif_300)[1]
         # Sequences in the tail of the museum's barplot 
-        tmp_flow$Value[4] <- dim(BMD_unq_voucher)[1] - dim(rgbif_300)[1]
+        tmp_flow$Value[4] <- dim(BMD_unq_voucher)[1] - dim(target_rgbif_300)[1]
         # Sequences WITHOUT geographical information in gbif
-        tmp_flow$Value[5] <- dim(rgbif_300)[1] - dim(rgbif_out)[1]
+        tmp_flow$Value[5] <- dim(target_rgbif_300)[1] - dim(rgbif_out)[1]
         # Sequences with geographical information in gbif
         tmp_flow$Value[6] <- dim(rgbif_out)[1]
         # Sequences with coordinates in GBIF
