@@ -21,6 +21,7 @@ read_chunk('flowchart_rgbif_BMD.R')
 read_chunk('barplot_museum_BMD.R')
 read_chunk('per_museum_list_BMD.R')
 read_chunk('museum_list_BMD.R')
+read_chunk('map_BMD.R')
 ```
 ```{r echo=F}
 # Location of the the raw database
@@ -46,4 +47,19 @@ We obtained all mitochondrial sequences for Aves in Genbank, in total there are 
 ```
 
 ```{r barplot.museum, echo=F}
+```
+
+```{r BMD.map, echo=F}
+```
+
+```{r BMD.genbank.and.gbif.map, echo=F}
+```
+
+```{r BMD.disjuntive.map, echo=F}
+```
+
+```{r BMD.intersection.map, echo=F}
+```
+
+```{r BMD.coordinates.diff.map, echo=F}
 ```
