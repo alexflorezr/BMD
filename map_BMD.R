@@ -27,7 +27,7 @@ Genbank_Gbif <- Genbank_Gbif[-which(sapply(temp_list, FUN=length) == 6),]
 
 ## ---- BMD.genbank.and.gbif.map ----
 # map for GenBank points ####
-library(rworldmap)
+library(rworldmap, quietly = T)
 library(sp)
 map.genBank.BMD <- function(A){
         tmp_points <- subset(A, A$Coordinates != "coordinates_are_not_available")
@@ -50,14 +50,14 @@ map.gbif.BMD <- function(A){
 map <- getMap()
 par(mar=c(0,0,0,0),oma=c(0,0,0,0))
 plot(map)
-points(map.genBank.BMD(Genbank_Gbif), pch=21, col="#474747", lwd=0.08, cex=0.7, bg="#B2DFEE98")
-points(map.gbif.BMD(Genbank_Gbif), pch=21, col="#474747", lwd=0.08, cex=0.7, bg="#8FBC8F98")
-mtext(side=3, line=-2, "Sequences with coordinates in Genbank and GBIF")
+points(map.genBank.BMD(Genbank_Gbif), pch=21, col="#87CEFA98", cex=0.7, bg="#87CEFA98")
+points(map.gbif.BMD(Genbank_Gbif), pch=21, col="#FF7F0098", cex=0.7, bg="#FF7F0098")
+mtext(side=3, line=-2, "All sequences with coordinates (GenBank + GBIF)")
 total_coor <- sum(dim(map.gbif.BMD(Genbank_Gbif))[1], dim(map.genBank.BMD(Genbank_Gbif))[1]) - 3700
 mtext(side = 3 , line=-3, paste(total_coor, "sequences", sep=" "))
 
 #### map for the disjuntive union ####
-## ---- BMD.disjuntive.map ----
+## ---- BMD.disjuntive.Genbank.map ----
 # plot only the genbank that are not in gbif and the gbif that are not in genbank
 only_genbank <- Genbank_Gbif[which(Genbank_Gbif$Coordinates != "coordinates_are_not_available"),]
 only_genbank_points <- only_genbank[which(is.na(only_genbank$decimalLatitude)),]
@@ -69,14 +69,15 @@ only_genbank <- only_genbank[-which(!is.na(only_genbank$decimalLatitude)),]
 map <- getMap()
 par(mar=c(0,0,0,0),oma=c(0,0,0,0))
 plot(map)
-points(map.genBank.BMD(only_genbank_points), pch=21, col="#474747", lwd=0.08, cex=0.7, bg="#B2DFEE98")
-mtext(side=3, line=-2, "Sequences with coordinates ONLY in Genbank")
+points(map.genBank.BMD(only_genbank_points), pch=21, col="#87CEFA98", cex=0.7, bg="#87CEFA98")
+mtext(side=3, line=-2, "Sequences with coordinates ONLY in GenBank")
 mtext(side = 3 , line=-3, paste(dim(map.genBank.BMD(only_genbank_points))[1], "sequences", sep=" "))
 # plot only gbif
+## ---- BMD.disjuntive.GBIF.map ----
 map <- getMap()
 par(mar=c(0,0,0,0),oma=c(0,0,0,0))
 plot(map)
-points(map.gbif.BMD(only_gbif_points), pch=21, col="#474747", lwd=0.08, cex=0.7, bg="#8FBC8F98")
+points(map.gbif.BMD(only_gbif_points), pch=21, col="#FF7F0098", cex=0.7, bg="#FF7F0098")
 mtext(side=3, line=-2, "Sequences with coordinates ONLY in GBIF")
 mtext(side = 3 , line=-3, paste(dim(map.gbif.BMD(only_gbif_points))[1], "sequences", sep=" "))
 # plot the intersection
@@ -85,7 +86,9 @@ mtext(side = 3 , line=-3, paste(dim(map.gbif.BMD(only_gbif_points))[1], "sequenc
 map <- getMap()
 par(mar=c(0,0,0,0),oma=c(0,0,0,0))
 plot(map)
-points(map.genBank.BMD(intersection), pch=21, col="#474747", lwd=0.08, cex=0.7, bg="#9F79EE98")
+points(map.genBank.BMD(intersection), pch=21, col="#87CEFA", cex=0.9, bg="#87CEFA")
+points(map.gbif.BMD(intersection), pch=21, col="#FF7F00", cex=0.9, bg="#FF7F00")
+
 mtext(side=3, line=-2, "Sequences with coordinates in BOTH Genbank and GBIF")
 mtext(side = 3 , line=-3, paste(dim(map.genBank.BMD(intersection))[1], "sequences", sep=" "))
 
@@ -108,5 +111,11 @@ for(r in seq_along(tmp_gbank[,1])){
         mean_diff[r] <- euclidian.dist(x1=x1, y1=y1, x2=x2, y2=y2)
        
 }
-bp <- boxplot(mean_diff, outline = F)
+par(mfrow=c(1,2), oma=c(3,3,3,3), mar=c(2,4,2,0))
+bp <- boxplot(mean_diff, outline = F,
+              ylab="Euclidean distance (decimal degrees)", 
+              main="No outliers")
+mtext(side = 1, line=1, "GenBank - GBIF")
+bp <- boxplot(mean_diff, outline = T,  main="With outliers")
+mtext(side = 1, line=1, "GenBank - GBIF")
 outliers <- length(bp$out)

@@ -42,7 +42,7 @@ make.flowtable_rgbif <- function(DB_raw, rgbif_out, node_names_tbl){
         tmp_flow
 }
 BMD.fchart.backbone.rgbif <- function(fromto_edge, boolean_lab){
-        par(mar = c(0, 0, 0, 0), oma=c(0,0,0,0))
+        par(mar = c(4, 0, 0, 0), oma=c(0,0,0,0))
         openplotmat()
         elpos <- coordinates(c(1,1, rep(11, 3)))
         fromto <- fromto_edge[,c(1,2)]
@@ -65,8 +65,8 @@ BMD.fchart.nodes.rgbif <- function(flow_table){
         for(A in seq_along(flow_table[,1])){
                 tmp_pos <- flow_table$Pos[A]
                 textround (elpos[tmp_pos,], 0.048, 0.04,lab = "",
-                           box.col = ifelse(tmp_pos == 1,"#EE7600", ifelse(tmp_pos == 15, "#EE6363", "#8FBC8F")), shadow.col = NULL,
-                           lcol = ifelse(tmp_pos == 1,"#EE7600", ifelse(tmp_pos == 15, "#EE6363", "#8FBC8F")))
+                           box.col = ifelse(tmp_pos == 1,"#8FBC8F", ifelse(tmp_pos == 15, "#EE6363", "#FF7F00")), shadow.col = NULL,
+                           lcol = ifelse(tmp_pos == 1,"#8FBC8F", ifelse(tmp_pos == 15, "#EE6363", "#FF7F00")))
         }
 }
 BMD.fchart.text.rgbif <- function(flow_table){

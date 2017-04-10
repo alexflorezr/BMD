@@ -1,3 +1,4 @@
+#FF7F00 <- orange
 #### TO SAVE ####
 #### This flowchart is for the GenBank data ####
 #### files needed ####
@@ -68,12 +69,12 @@ BMD.fchart.nodes <- function(flow_table){
         for(A in seq_along(flow_table[,1])){
                 tmp_pos <- flow_table$Pos[A]
                 textround (elpos[tmp_pos,], 0.048, 0.04,lab = "",
-                           box.col = ifelse(tmp_pos == 17,"#EE7600", "#B2DFEE"), shadow.col = NULL,
-                           lcol = ifelse(tmp_pos == 17,"#EE7600", "#B2DFEE"))
+                           box.col = ifelse(tmp_pos == 17,"#8FBC8F", "#B2DFEE"), shadow.col = NULL,
+                           lcol = ifelse(tmp_pos == 17,"#8FBC8F", "#B2DFEE"))
         }
 }
 BMD.fchart.backbone <- function(fromto_edge, boolean_lab){
-        par(mar = c(0, 0, 0, 0), oma=c(0,0,0,0))
+        par(mar = c(4, 0, 0, 0), oma=c(0,0,0,0))
         openplotmat()
         elpos <- coordinates(c(1,1, rep(11, 4)))
         fromto <- fromto_edge[,c(1,2)]

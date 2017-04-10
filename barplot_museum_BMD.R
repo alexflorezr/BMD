@@ -56,11 +56,11 @@ for(mus in seq_along(unique_museum)){
         tmp_mus_no_loc_gbif <- subset(tmp_mus_no_loc_gbank, is.na(tmp_mus_no_loc_gbank$verbatimLocality))
         barplot_tbl[5,mus] <- dim(tmp_mus_no_loc_gbif)[1]
 }
-par(mar=c(6,6,7,5), oma=c(0,0,0,0))
+par(mar=c(6,6,7,1), oma=c(0,0,0,0))
 barplot(as.matrix(barplot_tbl), las=2, main = NA,
-        names.arg = colnames(barplot_tbl), las=2, col=c( "#B2DFEE","#8FBC8F","#4F94CD","#2E8B57", "#EE6363"),
+        names.arg = colnames(barplot_tbl), las=2, col=c( "#B2DFEE","#FFA54F","#4F94CD","#FF7F00", "#EE6363"),
         border = NA,cex.names = 0.8)
-mtext(side=3, line=5, "Museums with more than 300 sequences in GenBank", cex=1.5)
+mtext(side=3, line=5, "Museums with more than 300 sequences", cex=1.5)
 mtext(side=3, line=3, paste(dim(target_rgbif_300)[1], " records")) 
 mtext(side=3, line=2, paste(round(dim(target_rgbif_300)[1]*100/dim(BMD_raw)[1], digits = 0),
                                 "%", " of all the sequences in Genbank", sep = ""))
@@ -75,6 +75,6 @@ lgnd_2 <- paste("Coordinates in GBIF")
 lgnd_3 <- paste("Locality in GenBank")
 lgnd_4 <- paste("Locality in GBIF") 
 lgnd_5 <- paste("No geographical information") 
-legend(19, 5000, legend=c(lgnd_1, lgnd_2, lgnd_3, lgnd_4, lgnd_5),
-       border = "white",fill = c( "#B2DFEE","#8FBC8F","#4F94CD","#2E8B57", "#EE6363"),
+legend(19, 5000, legend=rev(c(lgnd_1, lgnd_2, lgnd_3, lgnd_4, lgnd_5)),
+       border = "white",fill = rev(c( "#B2DFEE","#FFA54F","#4F94CD","#FF7F00", "#EE6363")),
        box.lwd = 0,box.col = "white",bg = "white", x.intersp = 0.2, y.intersp = 1, cex = 0.7)

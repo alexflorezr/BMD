@@ -7,15 +7,23 @@ date: "4/3/2017"
 output:
   pdf_document: default
   html_document: default
+  word_document: default
 ---
 
-# Map of Genetic diversity of Aves 
-## What data we need?
+# Map of genetic diversity of Aves 
 
-We need georeferenced DNA sequences to map the genetic diversity of any taxa. There are several ways to obtain this data. 1) directly from GenBank (or other genetic repositories), 2) using geonames to estimate the coordinates of the localities reported in GenBank, 3) Use other information in the GenBank records (e.g. voucher number, collection id) as links for cross-referencing with other databases (e.g. museum's and Gbif). Here I describe the dataset of mitochondrial DNA sequences for all Aves available in GenBank and how to obtain the voucher information for the sequences in GenBank.
+We need georeferenced DNA sequences to map the genetic diversity of any taxa. The lack of a central repository with this type of data propels us to implement multiple approaches to retrieve georeferenced DNA sequences. First, when available, we obtain georeferences from genetic repositories (e.g. GenBank, https://www.ncbi.nlm.nih.gov/genbank/). Second, if coordinates are not available, we use GeoNames (http://www.geonames.org/) to estimate coordinates from  locality descriptions in genetic repositories. Third, if neither coordinates nor localities are available, we use non-geographical information associated to the sequences (e.g. voucher number) to cross-reference with other databases (e.g. museums and GBIF). Here I describe the avian mitochondrial DNA dataset, and how to obtain coordinates using voucher information.
 
-```{r, echo=F, cache=F}
+
+```{r, echo=F, cache=F, message=F}
 library(knitr)
+library(sp)
+library(shape)
+library(rworldmap, quietly = T)
+library(diagram, quietly = T)
+```
+
+```{r, echo=F,}
 read_chunk('flowchart_genbank_BMD.R')
 read_chunk('flowchart_rgbif_BMD.R')
 read_chunk('barplot_museum_BMD.R')
@@ -32,10 +40,16 @@ BMD_raw <- read.delim(db, header = F, stringsAsFactors = F)
 colnames(BMD_raw) <- c("ID", "Species", "Coordinates", "Location", "Voucher","Isolate", "Haplotype")
 ```
 
-We obtained all mitochondrial sequences for Aves in Genbank, in total there are `r dim(BMD_raw)[1]` sequences. The binary tree below shows how the data is divided by category. Each one of the nodes correspond to a subset of the total dataset. For each node the number of sequences and the percentage relative to the total database is shown. Also, for each node a question (?) or a descriptor is shown (below the numbers). If it is a question, this node will be divided (subseted) in both, YES and NO branches.
+We obtained all avian mitochondrial sequences in GenBank (n = `r dim(BMD_raw)[1]`). Then, we used binary trees  (see below) to subset (nested nodes) the dataset by the type of information available. In each node the number of sequences and the percentage of the total database of each subset are shown. For example, the GenBank dataset can be divided in sequences with and without voucher information, for Aves, 54% (98646 sequences) of the sequences have voucher information. The GenBank binary tree shows that 38% (69420) of the avian dataset have unique vouchers (green node). This subset can be used to retrieve geographical information from open access biodiversity data (e.g. GBIF).
 
-```{r flowchart.genbank, echo=F}
+## GenBank binary tree
+
+```{r flowchart.genbank, echo=F, fig.align="center"}
 ```
+\vspace{12pt}
+\vspace{12pt}
+Similarly to the GenBank binary tree, the GBIF binary tree (see below) shows the hierarchy of each one of the nodes (subsets) and the percentage relative to the total dataset. The GBIF binary tree describes the amount of sequences for which is possible to obtain geographical information from GBIF, this using the voucher information as a link between GenBank and GBIF. To obtain the geographical information we used the package rgbif in R. After using the three approaches described in the first paragraph, we show that 25898 (14%, red node) sequences have voucher information, but lack geographical information (e.i. coordinates or localities). For this subset (red node) the geographical information could be retrieved using museums' databases. 
+
 
 ```{r museum.list, echo=F}
 ```
@@ -43,23 +57,57 @@ We obtained all mitochondrial sequences for Aves in Genbank, in total there are 
 ```{r museum.threshold, echo=F}
 ```
 
-```{r flowchart.rgbif, echo=F}
+## GBIF binary tree
+```{r flowchart.rgbif, echo=F, fig.align="center"}
+```
+\vspace{12pt}
+\vspace{12pt}
+## Museums' data
+
+We used the voucher information available in GenBank to associate each one of the sequences with their respective museum (see barplot below). Subsequently, for each museum we quantified: 1) sequences with coordinates in GenBank (lighter blue), 2) sequences with coordinates in GBIF (lighter orange), 3) sequences with locality description in GenBank (darker blue), 4) sequences with locality description in GBIF (darker orange), and 5) sequences with voucher, but lacking geographical information (red). Each bar represents a museum (abbreviation).
+\vspace{12pt}
+\vspace{12pt}
+
+```{r barplot.museum, echo=F, fig.align="center"}
+```
+\vspace{12pt}
+## Museum full names
+```{r echo=F}
+tmp_table <- read.delim("Musuem_list_only_text.txt", header = T)
+kable(tmp_table)
 ```
 
-```{r barplot.museum, echo=F}
+## Maps for the sequences 
+We mapped all the sequences for which coordinates were obtained from GenBank and GBIF. This data do not include the sequences with locality descriptions. Blue and orange dots represent GenBank and GBIF coordinates respectively.
+\vspace{12pt}
+```{r BMD.map, echo=F, fig.align="center"}
 ```
-
-```{r BMD.map, echo=F}
+\vspace{12pt}
+\vspace{12pt}
+```{r BMD.genbank.and.gbif.map, echo=F, fig.align="center"}
 ```
-
-```{r BMD.genbank.and.gbif.map, echo=F}
+\vspace{12pt}
+\vspace{12pt}
+```{r BMD.disjuntive.Genbank.map, echo=F, fig.align="center"}
 ```
-
-```{r BMD.disjuntive.map, echo=F}
+\vspace{12pt}
+\vspace{12pt}
+\vspace{12pt}
+\vspace{12pt}
+```{r BMD.disjuntive.GBIF.map, echo=F, fig.align="center"}
 ```
+\vspace{12pt}
+\vspace{12pt}
+We were able to simultaneously retrieve coordinates from both GenBank and GBIF for 3693 sequences. Assuming that coordinates in GenBank and GBIF are correct, we would expect that the map with points from both GenBank and GBIF will overlap completely, and that the absolut paired distance between GenBank and GBIF coordinates is equal to zero. We found that most of the points overlap and that in general the paired distance between GenBank and GBIF coordinates is smaller than 0.015 decimal degrees. However, for 405 sequences the absolut distance between Genbank and GBIF coordinates range from 0.017 to 360 decimal degrees, indicating that aproximately 11% of the sequences have incongruent coordinates in different repositories.
 
-```{r BMD.intersection.map, echo=F}
+```{r BMD.intersection.map, echo=F, fig.align="center"}
 ```
+\vspace{12pt}
+\vspace{12pt}
+\vspace{12pt}
 
-```{r BMD.coordinates.diff.map, echo=F}
+## Mean distance between GenBank and GBIF coordinates
+\vspace{12pt}
+\vspace{12pt}
+```{r BMD.coordinates.diff.map, echo=F, fig.align="center"}
 ```
