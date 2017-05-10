@@ -44,7 +44,7 @@ We obtained all avian mitochondrial sequences in GenBank (n = `r dim(BMD_raw)[1]
 
 ## GenBank binary tree
 
-```{r flowchart.genbank, echo=F, fig.align="center"}
+```{r flowchart.genbank, echo=T, fig.align="center"}
 ```
 \vspace{12pt}
 \vspace{12pt}
