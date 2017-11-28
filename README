@@ -1,0 +1,16 @@
+README or EXECUTEME
+To obtain a table with museum name:
+#Consensus script
+db <- "/Users/afr/Desktop/A/Postdoc/Birds_museum_data/BMD_exploratory/Data/coordinates.temp"
+BMD_raw <- read.delim(db, header = F, stringsAsFactors = F)
+colnames(BMD_raw) <- c("ID", "Species", "Coordinates", "Location", "Voucher","Isolate", "Haplotype")
+BMD_all_voucher <- DB_raw[DB_raw$Voucher != "voucher_is_not_available",]
+BMD_unq_voucher <- BMD_all_voucher[-which(duplicated(BMD_all_voucher$Voucher)),]
+target_rgbif_300 <- museum.threshold(BMD_unq_voucher, 300)
+target_rgbif_300 <- target_rgbif_300[-which(duplicated(target_rgbif_300$ID)),]
+rgbif_out_300 <- voucher.rgbif(A = target_rgbif_300, 300, save_mode =T , file_prefix = "unq_vou_300", 
+                               start_db = 1, end_db = 6225)
+Genbank_Gbif_target <- merge(BMD_unq_voucher, target_rgbif_300[,c(1,8:12)], by.x = "ID", by.y = "ID", all=T)
+Genbank_Gbif <- merge(Genbank_Gbif_target, rgbif_out_300, by.x = "ID", by.y = "ID", all=T)
+
+ACC <- read.delim(file.choose())
